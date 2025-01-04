@@ -94,3 +94,37 @@ form {
     border-color: rgb(255, 230, 230);
     background-color: rgb(249, 136, 136) !important; /* Slightly more pink on hover */
 }
+
+.list-group-item img {
+    display: none; /* Add this line to hide the images */
+}
+
+.btn i {
+    font-size: 20px;
+}
+
+.list-group-item i.fas.fa-user-friends {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.chat-box {
+    flex-grow: 1;
+    overflow-y: auto;
+    height: calc(100vh - 150px); /* Adjust height to fit the screen */
+}
+
+.input-group {
+    flex-shrink: 0;
+    margin-bottom: 10px; /* Add margin below the input group */
+}
+
+.input-group .form-control {
+    flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+    .chat-box {
+        height: calc(100vh - 150px); /* Adjust height to fit the screen */
+    }
+}

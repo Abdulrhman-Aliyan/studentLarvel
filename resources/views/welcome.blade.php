@@ -297,6 +297,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div id="noSubjectsWarning" class="alert alert-warning" style="display: none;">
+                    No subjects found for this user. Please add subjects first.
+                </div>
                 <table class="table table-striped table-hover mt-3">
                     <thead class="table-dark">
                         <tr>
@@ -380,6 +383,18 @@
     </div>
 </div>
 
+<!-- Toast Notification -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="assignSubjectToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Subject assigned successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <script>
 $.ajaxSetup({
     headers: {
@@ -440,18 +455,25 @@ function openUpdateGradeModal(studentId) {
         method: 'GET',
         success: function(data) {
             let subjectsTableBody = '';
-            data.forEach(subject => {
-                subjectsTableBody += `
-                    <tr>
-                        <td>${subject.subject.subject_name}</td>
-                        <td>${subject.subject.pass_grade}</td>
-                        <td>
-                            <input type="number" class="form-control" id="newGrade-${subject.subject_id}" value="${subject.user_grade}">
-                        </td>
-                    </tr>
-                `;
-            });
-            $('#studentSubjectsTableBody').html(subjectsTableBody);
+            if (data.length === 0) {
+                $('#noSubjectsWarning').show();
+                $('#studentSubjectsTableBody').closest('table').hide();
+            } else {
+                $('#noSubjectsWarning').hide();
+                $('#studentSubjectsTableBody').closest('table').show();
+                data.forEach(subject => {
+                    subjectsTableBody += `
+                        <tr>
+                            <td>${subject.subject.subject_name}</td>
+                            <td>${subject.subject.pass_grade}</td>
+                            <td>
+                                <input type="number" class="form-control" id="newGrade-${subject.subject_id}" value="${subject.user_grade}">
+                            </td>
+                        </tr>
+                    `;
+                });
+                $('#studentSubjectsTableBody').html(subjectsTableBody);
+            }
             $('#updateGradeModal').data('studentId', studentId);
             new bootstrap.Modal(document.getElementById('updateGradeModal')).show();
         },
@@ -724,6 +746,29 @@ document.getElementById('addSubjectForm').addEventListener('submit', function(ev
         contentType: false,
         success: function(data) {
             $('#addSubjectModal').modal('hide');
+            // Optionally refresh the subjects list or perform other actions
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+document.getElementById('assignSubjectForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    $.ajax({
+        url: '{{ route("userSubjects.storeWithoutGrade") }}',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            $('#assignSubjectModal').modal('hide');
+            var toast = new bootstrap.Toast(document.getElementById('assignSubjectToast'));
+            toast.show();
             // Optionally refresh the subjects list or perform other actions
         },
         error: function(error) {
