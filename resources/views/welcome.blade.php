@@ -396,9 +396,9 @@ $(document).ready(function() {
     const studentIsActive = $('#studentIsActive').val();
     const studentIsActiveButton = $('#studentIsActiveButton');
     if (studentIsActive == 1) {
-        studentIsActiveButton.addClass('custom-active');
+        studentIsActiveButton.addClass('custom-active').removeClass('custom-inactive');
     } else {
-        studentIsActiveButton.addClass('custom-inactive');
+        studentIsActiveButton.addClass('custom-inactive').removeClass('custom-active');
     }
 });
 
