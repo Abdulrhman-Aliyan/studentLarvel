@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subject;
+use App\Models\UserSubject; // Add this line
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -14,17 +15,24 @@ class SubjectController extends Controller
             'pass_grade' => 'required|integer',
         ]);
 
-        Subject::create([
+        $subject = Subject::create([
             'subject_name' => $request->subject_name,
             'pass_grade' => $request->pass_grade,
         ]);
 
-        return redirect()->route('home')->with('success', 'Subject added successfully.');
+        return response()->json(['success' => 'Subject added successfully.', 'subject' => $subject]);
     }
 
     public function index()
     {
         $subjects = Subject::all();
-        return view('welcome', compact('subjects'));
+        return response()->json($subjects);
+    }
+
+    public function getAvailableSubjects($studentId)
+    {
+        $assignedSubjectIds = UserSubject::where('user_id', $studentId)->pluck('subject_id');
+        $availableSubjects = Subject::whereNotIn('id', $assignedSubjectIds)->get();
+        return response()->json($availableSubjects);
     }
 }

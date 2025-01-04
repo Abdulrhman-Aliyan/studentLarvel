@@ -10,6 +10,12 @@ class StudentController extends Controller
 {
     // ...existing code...
 
+    public function index()
+    {
+        $students = User::where('user_type', 1)->get(); // Fetch only students
+        return response()->json($students);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -18,13 +24,13 @@ class StudentController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        User::create([
+        $student = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('home')->with('success', 'Student added successfully.');
+        return response()->json(['success' => 'Student added successfully.', 'student' => $student]);
     }
 
     public function update(Request $request, $id)
@@ -41,7 +47,7 @@ class StudentController extends Controller
             'user_active' => $request->user_active,
         ]);
 
-        return redirect()->route('home')->with('success', 'Student updated successfully.');
+        return response()->json(['success' => 'Student updated successfully.', 'student' => $student]);
     }
 
     public function destroy($id)
@@ -49,7 +55,7 @@ class StudentController extends Controller
         $student = User::findOrFail($id);
         $student->delete();
 
-        return redirect()->route('home')->with('success', 'Student deleted successfully.');
+        return response()->json(['success' => 'Student deleted successfully.']);
     }
 
     public function edit($id)
