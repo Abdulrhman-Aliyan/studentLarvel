@@ -199,8 +199,12 @@
     <!-- Display students' subjects and grades if user is admin -->
     @if(Auth::user()->user_type == 2)
         <h2 class="text-center mt-5">All Students</h2>
-        <button class="btn btn-success mb-3" onclick="openAddStudentModal()">Add Student</button>
-        <button class="btn btn-primary mb-3" onclick="openAddSubjectModal()">Add Subject</button>
+        <button class="btn btn-success mb-3" onclick="openAddStudentModal()">
+            <i class="bi bi-person-plus"></i> Add Student
+        </button>
+        <button class="btn btn-primary mb-3" onclick="openAddSubjectModal()">
+            <i class="bi bi-book"></i> Add Subject
+        </button>
         <div id="studentsLoading" class="text-center">
             <i class="bi bi-arrow-repeat loading-icon"></i> Loading...
         </div>
@@ -224,7 +228,9 @@
     <div class="modal-dialog">
         <div class="modal-content border-0 shadow-none">
             <div class="modal-header">
-                <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                <h5 class="modal-title" id="addStudentModalLabel">
+                    <i class="bi bi-person-plus"></i> Add Student
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -261,7 +267,9 @@
                         </div>
                         <div id="newStudentRepeatPasswordError" class="form-text text-danger" style="display: none;">Passwords do not match.</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Student</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-person-plus"></i> Add Student
+                    </button>
                 </form>
             </div>
         </div>
@@ -273,7 +281,9 @@
     <div class="modal-dialog">
         <div class="modal-content border-0 shadow-none">
             <div class="modal-header">
-                <h5 class="modal-title" id="addSubjectModalLabel">Add Subject</h5>
+                <h5 class="modal-title" id="addSubjectModalLabel">
+                    <i class="bi bi-book"></i> Add Subject
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -287,7 +297,9 @@
                         <label for="passGrade" class="form-label">Pass Grade</label>
                         <input type="number" class="form-control" id="passGrade" name="pass_grade" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Subject</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-book"></i> Add Subject
+                    </button>
                 </form>
             </div>
         </div>
@@ -299,7 +311,9 @@
     <div class="modal-dialog">
         <div class="modal-content border-0 shadow-none">
             <div class="modal-header">
-                <h5 class="modal-title" id="assignSubjectModalLabel">Assign Subject</h5>
+                <h5 class="modal-title" id="assignSubjectModalLabel">
+                    <i class="bi bi-plus-circle"></i> Assign Subject
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -312,7 +326,9 @@
                             <!-- Options will be populated via AJAX -->
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Assign Subject</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Assign Subject
+                    </button>
                 </form>
             </div>
         </div>
@@ -324,7 +340,9 @@
     <div class="modal-dialog">
         <div class="modal-content border-0 shadow-none">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateGradeModalLabel">Update Grades</h5>
+                <h5 class="modal-title" id="updateGradeModalLabel">
+                    <i class="bi bi-bar-chart"></i> Update Grades
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -342,7 +360,9 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="updateAllGrades()">Update Grades</button>
+                <button type="button" class="btn btn-primary" onclick="updateAllGrades()">
+                    <i class="bi bi-arrow-repeat"></i> Update
+                </button>
             </div>
         </div>
     </div>
@@ -353,7 +373,9 @@
     <div class="modal-dialog">
         <div class="modal-content border-0 shadow-none">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Student</h5>
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="bi bi-pencil"></i> Edit Student
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -375,7 +397,9 @@
                         </button>
                         <input type="hidden" id="studentIsActive" name="user_active" value="1">
                     </div>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Save changes
+                    </button>
                 </form>
             </div>
         </div>
@@ -387,7 +411,9 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="bi bi-trash"></i> Confirm Delete
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -396,7 +422,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-danger" id="confirmDeleteButton">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash"></i> Delete
                 </button>
             </div>
         </div>
@@ -606,8 +632,12 @@ function refreshStudentsTable() {
                             <button class="btn btn-danger" onclick="openDeleteModal(${student.id})">
                                 <i class="bi bi-trash"></i>
                             </button>
-                            <button class="btn btn-secondary" onclick="openAssignSubjectModal(${student.id})">Assign Subject</button>
-                            <button class="btn btn-info" onclick="openUpdateGradeModal(${student.id})">Grades</button>
+                            <button class="btn btn-secondary" onclick="openAssignSubjectModal(${student.id})">
+                                <i class="bi bi-plus-circle"></i> Assign Subject
+                            </button>
+                            <button class="btn btn-info" onclick="openUpdateGradeModal(${student.id})">
+                                <i class="bi bi-bar-chart"></i> Grades
+                            </button>
                             <form id="delete-form-${student.id}" action="/students/${student.id}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')
