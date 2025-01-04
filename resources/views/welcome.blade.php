@@ -57,56 +57,7 @@
     </h6>
 
     <style>
-        .celebratory-message {
-            cursor: pointer;
-        }
-
-        .celebratory-message:hover .emoji {
-            display: inline-block;
-            animation: emoji-fall 2s forwards;
-        }
-
-        .emoji {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1rem;
-        }
-
-        @keyframes emoji-fall {
-            0% { transform: translateY(-100%); opacity: 1; }
-            100% { transform: translateY(100%); opacity: 0; }
-        }
-
-        .particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background: #ff0;
-            border-radius: 50%;
-            animation: particle-fall 1s forwards;
-        }
-
-        @keyframes particle-fall {
-            0% { transform: translateY(-50px); opacity: 1; }
-            100% { transform: translateY(50px); opacity: 0; }
-        }
-
-        .particle.red { background: #ff0000; }
-        .particle.green { background: #00ff00; }
-        .particle.blue { background: #0000ff; }
-        .particle.purple { background: #800080; }
-        .particle.orange { background: #ffa500; }
-
-        .loading-icon {
-            animation: rotate 1s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        
     </style>
 
     <script>
@@ -440,6 +391,15 @@ $(document).ready(function() {
     if ({{ Auth::user()->user_type }} == 2) {
         refreshStudentsTable();
     }
+
+    // Set initial background color based on active status
+    const studentIsActive = $('#studentIsActive').val();
+    const studentIsActiveButton = $('#studentIsActiveButton');
+    if (studentIsActive == 1) {
+        studentIsActiveButton.addClass('custom-active');
+    } else {
+        studentIsActiveButton.addClass('custom-inactive');
+    }
 });
 
 function openAddStudentModal() {
@@ -561,14 +521,17 @@ function toggleActiveStatus() {
     const activeStatusDot = $('#activeStatusDot');
     const activeStatusText = $('#activeStatusText');
     const studentIsActive = $('#studentIsActive');
+    const studentIsActiveButton = $('#studentIsActiveButton');
 
     const newStatus = studentIsActive.val() == 1 ? 0 : 1;
     if (newStatus == 1) {
         activeStatusDot.removeClass('text-danger').addClass('text-success');
         activeStatusText.text('Active');
+        studentIsActiveButton.removeClass('custom-inactive').addClass('custom-active');
     } else {
         activeStatusDot.removeClass('text-success').addClass('text-danger');
         activeStatusText.text('Inactive');
+        studentIsActiveButton.removeClass('custom-active').addClass('custom-inactive');
     }
     studentIsActive.val(newStatus);
 }
@@ -769,4 +732,26 @@ document.getElementById('addSubjectForm').addEventListener('submit', function(ev
     });
 });
 </script>
+
+<style>
+    .btn-outline-secondary.custom-active {
+        border-color: transparent;
+        background-color: rgba(0, 255, 0, 0.1); /* Hint of green */
+    }
+
+    .btn-outline-secondary.custom-active:hover {
+        border-color: transparent;
+        background-color: rgba(0, 255, 0, 0.2); /* Slightly more green on hover */
+    }
+
+    .btn-outline-secondary.custom-inactive {
+        border-color: transparent;
+        background-color: rgba(255, 0, 0, 0.1); /* Hint of pink */
+    }
+
+    .btn-outline-secondary.custom-inactive:hover {
+        border-color: transparent;
+        background-color: rgba(255, 0, 0, 0.2); /* Slightly more pink on hover */
+    }
+</style>
 @endsection

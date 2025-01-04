@@ -22,3 +22,75 @@ form {
     background-color: #0056b3;
     border-color: #004085;
 }
+
+
+.celebratory-message {
+    cursor: pointer;
+}
+
+.celebratory-message:hover .emoji {
+    display: inline-block;
+    animation: emoji-fall 2s forwards;
+}
+
+.emoji {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+}
+
+@keyframes emoji-fall {
+    0% { transform: translateY(-100%); opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
+}
+
+.particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #ff0;
+    border-radius: 50%;
+    animation: particle-fall 1s forwards;
+}
+
+@keyframes particle-fall {
+    0% { transform: translateY(-50px); opacity: 1; }
+    100% { transform: translateY(50px); opacity: 0; }
+}
+
+.particle.red { background: #ff0000; }
+.particle.green { background: #00ff00; }
+.particle.blue { background: #0000ff; }
+.particle.purple { background: #800080; }
+.particle.orange { background: #ffa500; }
+
+.loading-icon {
+    animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn-outline-secondary.custom-active {
+    border-color: rgb(229, 255, 242);
+    background-color: rgb(229, 255, 242) !important; /* Hint of green */
+}
+
+.btn-outline-secondary.custom-active:hover {
+    border-color: rgb(229, 255, 242);
+    background-color: rgb(126, 246, 186) !important; /* Slightly more green on hover */
+}
+
+.btn-outline-secondary.custom-inactive {
+    border-color: rgb(255, 230, 230);
+    background-color: rgb(255, 230, 230) !important; /* Hint of pink */
+}
+
+.btn-outline-secondary.custom-inactive:hover {
+    border-color: rgb(255, 230, 230);
+    background-color: rgb(249, 136, 136) !important; /* Slightly more pink on hover */
+}
