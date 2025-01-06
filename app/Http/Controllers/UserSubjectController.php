@@ -45,6 +45,33 @@ class UserSubjectController extends Controller
         return response()->json($subjects);
     }
 
+    public function getSubjectColleaguesWithSharedSubjects($student_id)
+    {
+    // Step 1: Get all subject IDs the user is enrolled in
+    $subjectIds = UserSubject::where('user_id', $student_id)
+                             ->pluck('subject_id');
+
+    // Step 2: Get colleagues who share at least one subject with the user
+    $colleagues = UserSubject::whereIn('subject_id', $subjectIds)
+                             ->where('user_id', '!=', $student_id)
+                             ->with(['user', 'subject']) // Eager load related user and subject data
+                             ->get();
+
+    // Step 3: Group colleagues by user_id and collect shared subjects
+    $colleagueData = $colleagues->groupBy('user_id')->map(function ($colleagueSubjects) {
+        $user = $colleagueSubjects->first()->user; // Get the colleague's details
+        $sharedSubjects = $colleagueSubjects->pluck('subject.subject_name'); // Get shared subject names
+
+        return [
+            'colleague' => $user,
+            'shared_subjects' => $sharedSubjects
+        ];
+    });
+
+    // Step 4: Return the results as JSON
+    return response()->json($colleagueData);
+    }
+
     public function updateGrade(Request $request, $student_id, $subject_id)
     {
         $request->validate([

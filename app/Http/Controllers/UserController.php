@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // ...existing code...
-
     public function getUserInfo()
     {
         try {
@@ -28,6 +26,4 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    // ...existing code...
 }

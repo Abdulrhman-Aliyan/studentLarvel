@@ -783,7 +783,7 @@ document.getElementById('assignSubjectForm').addEventListener('submit', function
         border-color: transparent;
         background-color: rgba(0, 255, 0, 0.1); /* Hint of green */
     }
-
+    
     .btn-outline-secondary.custom-active:hover {
         border-color: transparent;
         background-color: rgba(0, 255, 0, 0.2); /* Slightly more green on hover */

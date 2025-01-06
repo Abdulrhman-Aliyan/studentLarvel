@@ -7,6 +7,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserSubjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChatController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -92,3 +93,10 @@ Route::get('/students/{id}/subjects/grades', [UserSubjectController::class, 'get
 
 // Fetch available subjects for a specific student
 Route::get('/students/{studentId}/available-subjects', [SubjectController::class, 'getAvailableSubjects']);
+
+//Fetch students with the same subjects for the user
+Route::get('/students/{student_id}/colleagues-with-shared-subjects', [UserSubjectController::class, 'getSubjectColleaguesWithSharedSubjects'])->name('students.subjects.colleagues');
+
+// Chat Routes
+Route::post('/send-message/{recipientId}', [ChatController::class, 'sendMessage'])->name('chat.send');
+Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
