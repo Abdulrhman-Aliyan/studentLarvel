@@ -8,95 +8,59 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserSubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChatController;
-
+use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
-// Display login page
-Route::get('/login', function () {
-    return view('login');
-})->name('login')->middleware('guest');
+Route::middleware('guest')->group(function () {
+    Route::view('/login', 'login')->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+    Route::view('/register', 'register')->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
+});
 
-// Handle login form submission
-Route::post('/login', [LoginController::class, 'login'])->name('login.post')->middleware('guest');
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::post('/broadcasting/auth', [BroadcastController::class, 'authenticate']);
 
-// Handle logout
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
-
-// Home Route
-// Display home page
-Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');
-
-// Registration Routes
-// Display registration page
-Route::get('/register', function () {
-    return view('register');
-})->name('register');
-
-// Handle registration form submission
-Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
-
-// Chat Route
-// Display chat page
-Route::get('/chat', function () {
-    return view('chat');
-})->name('chat');
+    // Chat Routes
+    Route::get('/chat', function () {
+        return view('chat');
+    })->name('chat');
+    Route::post('/send-message/{recipientId}', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/receive-message', [ChatController::class, 'sendMessage'])->name('chat.receive');
+    Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');
+});
 
 // Student Routes
-// Add a new student
-Route::post('/students', [StudentController::class, 'store'])->name('students.store');
-
-// Update an existing student
-Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
-
-// Delete a student
-Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
-
-// Fetch student data for editing
-Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
-
-// Fetch all students
-Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+Route::prefix('students')->name('students.')->group(function () {
+    Route::post('/', [StudentController::class, 'store'])->name('store');
+    Route::put('/{id}', [StudentController::class, 'update'])->name('update');
+    Route::delete('/{id}', [StudentController::class, 'destroy'])->name('destroy');
+    Route::get('/{id}/edit', [StudentController::class, 'edit'])->name('edit');
+    Route::get('/', [StudentController::class, 'index'])->name('index');
+    Route::get('/{id}/subjects', [UserSubjectController::class, 'getSubjects'])->name('subjects');
+    Route::get('/{id}/subjects/grades', [UserSubjectController::class, 'getSubjectsAndGrades'])->name('subjects.grades');
+    Route::get('/{studentId}/available-subjects', [SubjectController::class, 'getAvailableSubjects']);
+    Route::get('/{student_id}/colleagues-with-shared-subjects', [UserSubjectController::class, 'getSubjectColleaguesWithSharedSubjects'])->name('subjects.colleagues');
+    Route::put('/{student_id}/subjects/{subject_id}', [UserSubjectController::class, 'updateGrade'])->name('subjects.update');
+    Route::put('/{student_id}/subjects/updateAll', [UserSubjectController::class, 'updateAllGrades'])->name('subjects.updateAll');
+});
 
 // Subject Routes
-// Add a new subject
-Route::post('/subjects', [SubjectController::class, 'store'])->name('subjects.store');
-
-// Fetch all subjects
-Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
+Route::prefix('subjects')->name('subjects.')->group(function () {
+    Route::post('/', [SubjectController::class, 'store'])->name('store');
+    Route::get('/', [SubjectController::class, 'index'])->name('index');
+});
 
 // User Subject Routes
-// Add a subject to a user
 Route::post('/userSubjects', [UserSubjectController::class, 'store'])->name('userSubjects.store');
-
-// Add a subject to a user without a grade
 Route::post('/userSubjects', [UserSubjectController::class, 'storeWithoutGrade'])->name('userSubjects.storeWithoutGrade');
 
-// Fetch subjects for a specific student
-Route::get('/students/{id}/subjects', [UserSubjectController::class, 'getSubjects'])->name('students.subjects');
-
-// Update grade for a specific subject of a student
-Route::put('/students/{student_id}/subjects/{subject_id}', [UserSubjectController::class, 'updateGrade'])->name('students.subjects.update');
-
-// Update all grades for a specific student
-Route::put('/students/{student_id}/subjects/updateAll', [UserSubjectController::class, 'updateAllGrades'])->name('students.subjects.updateAll');
-
 // User Routes
-// Fetch user information
-Route::get('/user/info', [UserController::class, 'getUserInfo'])->name('user.info');
-
-// Fetch subjects for the logged-in user
-Route::get('/user/subjects', [UserController::class, 'getUserSubjects'])->name('user.subjects');
-
-// Fetch subjects and grades for a specific student
-Route::get('/students/{id}/subjects/grades', [UserSubjectController::class, 'getSubjectsAndGrades'])->name('students.subjects.grades');
-
-// Fetch available subjects for a specific student
-Route::get('/students/{studentId}/available-subjects', [SubjectController::class, 'getAvailableSubjects']);
-
-//Fetch students with the same subjects for the user
-Route::get('/students/{student_id}/colleagues-with-shared-subjects', [UserSubjectController::class, 'getSubjectColleaguesWithSharedSubjects'])->name('students.subjects.colleagues');
-
-// Chat Routes
-Route::post('/send-message/{recipientId}', [ChatController::class, 'sendMessage'])->name('chat.send');
-Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
+Route::prefix('user')->name('user.')->group(function () {
+    Route::get('/info', [UserController::class, 'getUserInfo'])->name('info');
+    Route::get('/subjects', [UserController::class, 'getUserSubjects'])->name('subjects');
+});

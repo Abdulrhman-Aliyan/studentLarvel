@@ -3,10 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Message extends Model
 {
-    protected $fillable = ['sender_id', 'recipient_id', 'message'];  // Changed 'content' to 'message'
+    use HasFactory;
+
+    protected $fillable = [
+        'sender_id',
+        'recipient_id',
+        'content',
+    ];
 
     public function sender()
     {

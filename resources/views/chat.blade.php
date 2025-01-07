@@ -7,15 +7,28 @@
         Pusher.logToConsole = true;
 
         var pusher = new Pusher('855d5672d0118b36d4a5', {
-            cluster: 'ap2'
+            cluster: 'ap2',
+            encrypted: true
+        });
+
+        // check connection status 
+        pusher.connection.bind('connected', function() {
+            console.log('Pusher connected successfully');
         });
 
         var channel = pusher.subscribe('chat-channel');
+        channel.bind('pusher:subscription_succeeded', function() {
+            console.log('Subscribed to chat-channel successfully');
+        });
+
         channel.bind('message-sent', function(data) {
-            if (data.user.id === selectedFriendId || data.user.id === {{ auth()->id() }}) {
-                addMessage(data.message, data.user);
+            console.log('Entering message-sent event handler'); // Log entry into the function
+            console.log('Received message-sent event:', data); // Log the received data for debugging
+            debugger; // Add debugger statement here
+            if ((data.user.id === selectedFriendId && data.recipientId === {{ auth()->id() }}) || 
+                (data.user.id === {{ auth()->id() }} && data.recipientId === selectedFriendId)) {
+                addMessage(data.message.content, data.user);
             }
-            console.log('Received message:', data.message);
         });
 
         let selectedFriendId = null;
@@ -27,6 +40,16 @@
             messageElement.innerHTML = `<span>${message}</span>`;
             chatBox.appendChild(messageElement);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function displayTestMessage(message) {
+            const testMessageElement = document.createElement('div');
+            testMessageElement.classList.add('test-message');
+            testMessageElement.innerHTML = `<span>${message}</span>`;
+            document.body.appendChild(testMessageElement);
+            setTimeout(() => {
+                testMessageElement.remove();
+            }, 5000);
         }
 
         function loadMessages(friendId) {
@@ -42,7 +65,7 @@
                     chatBox.innerHTML = ''; // Clear existing messages
                     if (data.length > 0) {
                         data.forEach(message => {
-                            addMessage(message.message, { id: message.sender_id });
+                            addMessage(message.content, { id: message.sender_id });
                         });
                     } else {
                         chatBox.innerHTML = '<div class="no-friend-selected">No messages found</div>';
@@ -56,7 +79,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded');
             const chatBox = document.querySelector('.chat-box');
             chatBox.innerHTML = '<div class="no-friend-selected">No friend selected</div>';
             fetchColleagues(); // Fetch colleagues on page load
@@ -64,9 +86,7 @@
             // Fetch and log all messages and their senders
             fetch('/messages/all')
                 .then(response => response.json())
-                .then(data => {
-                    console.log('All messages and their senders:', data);
-                })
+                .then(data => {})
                 .catch(error => console.error('Error fetching all messages:', error));
         });
 
@@ -113,8 +133,11 @@
             element.classList.add('active');
             selectedFriendId = friendId;
             loadMessages(friendId); // Load messages for the selected friend
-        }
 
+            // Enable the input field and send button
+            document.getElementById('messageInput').disabled = false;
+            document.querySelector('.send-btn').disabled = false;
+        }
     </script>
 
     @vite(['resources/js/app.js'])
@@ -158,21 +181,11 @@
         <div class="col-md-9 d-flex flex-column h-100">
             <h4>Messages</h4>
             <div class="chat-box flex-grow-1 border rounded p-3 mb-3">
-                <!-- Dummy messages -->
-                <div class="message received"><span>Hello, how are you?</span></div>
-                <div class="message sent"><span>I'm good, thanks! How about you?</span></div>
-                <div class="message received"><span>I'm doing well, thank you!</span></div>
-                <div class="message sent"><span>Great to hear!</span></div>
-                <div class="message received"><span>What are you up to?</span></div>
-                <div class="message sent"><span>Just working on a project. You?</span></div>
-                <div class="message received"><span>Same here, just coding away.</span></div>
-                <div class="message sent"><span>Nice! Keep it up!</span></div>
-                <div class="message received"><span>Thanks, you too!</span></div>
-                <!-- Add more dummy messages as needed -->
+            <!-- javascript will put messages here -->
             </div>
             <div class="input-group mb-3" style="position: sticky; bottom: 0; background: white;">
-                <input type="text" class="form-control flex-grow-1" placeholder="Type a message..." style="height: 50px; border: none;" id="messageInput">
-                <button class="btn icon-btn send-icon send-btn" type="button" style="border: none;" onclick="sendMessage()">
+                <input type="text" class="form-control flex-grow-1" placeholder="Type a message..." style="height: 50px; border: none;" id="messageInput" disabled>
+                <button class="btn icon-btn send-icon send-btn" type="button" style="border: none;" onclick="sendMessage()" disabled>
                     <i class="bi bi-caret-right-fill" style="font-size: 1.5rem;"></i>
                 </button>
             </div>
@@ -187,11 +200,14 @@
         element.classList.add('active');
         selectedFriendId = friendId;
         loadMessages(friendId); // Load messages for the selected friend
+
+        // Enable the input field and send button
+        document.getElementById('messageInput').disabled = false;
+        document.querySelector('.send-btn').disabled = false;
     }
 
     // AJAX call to fetch colleagues and their shared subjects
     function fetchColleagues() {
-        console.log('Fetching colleagues...');
         const studentId = {{ auth()->id() }}; // The student ID to fetch colleagues for
         $.ajax({
             url: `/students/${studentId}/colleagues-with-shared-subjects`,
@@ -200,7 +216,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token for security
             },
             success: function (data) {
-                console.log('Colleagues with Shared Subjects:', data);
                 displayColleagues(data);  // Display the fetched colleagues in the list
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -218,24 +233,26 @@
 
         if (message.trim() === '' || selectedFriendId === null) return;
 
-        fetch(`/send-message/${selectedFriendId}`, {
+        $.ajax({
+            url: `/send-message/${selectedFriendId}`,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            body: JSON.stringify({ message })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'Message Sent!') {
-                messageInput.value = '';
-                addMessage(message, { id: {{ auth()->id() }} }); // Add the sent message to the chat box
-            } else {
-                console.error('Error:', data);
+            data: JSON.stringify({ message }),
+            success: function(data) {
+                if (data.status === 'Message Sent!') {
+                    messageInput.value = '';
+                    addMessage(data.message.content, { id: {{ auth()->id() }} }); // Add the sent message to the chat box
+                } else {
+                    console.error('Error:', data);
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
             }
-        })
-        .catch(error => console.error('Error:', error));
+        });
     }
 </script>
 @endsection
