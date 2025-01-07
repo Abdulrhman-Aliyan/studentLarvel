@@ -17,13 +17,13 @@ class MessageSent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $message;
+    public $content;
     public $recipientId;
 
-    public function __construct(User $user, Message $message, $recipientId)
+    public function __construct(User $user, Message $content, $recipientId)
     {
         $this->user = $user;
-        $this->message = $message;
+        $this->content = $content;
         $this->recipientId = $recipientId;
     }
 

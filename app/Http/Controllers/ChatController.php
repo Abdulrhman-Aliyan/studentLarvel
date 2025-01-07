@@ -7,6 +7,8 @@ use App\Events\MessageSent;
 use App\Models\Message;
 use App\Models\User; // Add this line
 use Illuminate\Support\Facades\Log;
+use Pusher\Pusher;
+
 
 class ChatController extends Controller
 {
@@ -38,11 +40,7 @@ class ChatController extends Controller
 
     public function sendMessage(Request $request, $recipientId = null)
     {
-        $request->validate([
-            'message' => 'required|string|max:255',
-        ]);
-
-        $Content = $request->input('message');
+        $content = $request->input('message');
         $user = auth()->user();
         $recipientId = $recipientId ?? $request->input('recipient_id');
 
@@ -57,13 +55,28 @@ class ChatController extends Controller
             $message = Message::create([
                 'sender_id' => $user->id,
                 'recipient_id' => $recipientId,
-                'content' => $Content,
+                'content' => $content,
             ]);
 
-            // Broadcast the event
-            broadcast(new MessageSent($user, $Content, $recipientId))->toOthers();
 
-            return response()->json(['status' => 'Message Sent!', 'message' => $message]);
+            // Broadcast the event
+            $pusher = new Pusher(
+                env('PUSHER_APP_KEY'),
+                env('PUSHER_APP_SECRET'),
+                env('PUSHER_APP_ID'),
+                array(
+                    'cluster' => env('PUSHER_APP_CLUSTER'),
+                    'useTLS' => true
+                )
+            );
+            
+            $pusher->trigger('chat-channel', 'message-sent', [
+                'user' => $user,
+                'content' => $content,
+                'recipientId' => $recipientId
+            ]);
+
+            return response()->json(['status' => true, 'message' => 'message sent']);
         } catch (\Exception $e) {
             Log::error('Failed to send message: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to send message', 'details' => $e->getMessage()], 500);

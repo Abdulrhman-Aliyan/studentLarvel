@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -32,9 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/receive-message', [ChatController::class, 'sendMessage'])->name('chat.receive');
     Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
     Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');
+    
 });
 
 // Student Routes
+Broadcast::routes(['middleware' => 'auth']);
+
 Route::prefix('students')->name('students.')->group(function () {
     Route::post('/', [StudentController::class, 'store'])->name('store');
     Route::put('/{id}', [StudentController::class, 'update'])->name('update');

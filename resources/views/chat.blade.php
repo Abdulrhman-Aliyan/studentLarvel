@@ -4,32 +4,17 @@
     <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
     <script>
         // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
 
-        var pusher = new Pusher('855d5672d0118b36d4a5', {
-            cluster: 'ap2',
-            encrypted: true
-        });
-
-        // check connection status 
-        pusher.connection.bind('connected', function() {
-            console.log('Pusher connected successfully');
+        var pusher = new Pusher('c9be7f6bf30ca36c9855', {
+            cluster: 'ap2'
         });
 
         var channel = pusher.subscribe('chat-channel');
-        channel.bind('pusher:subscription_succeeded', function() {
-            console.log('Subscribed to chat-channel successfully');
+        channel.bind('message-sent', function(data) {
+            addMessage(data.content, { id: data.sender_id });
         });
 
-        channel.bind('message-sent', function(data) {
-            console.log('Entering message-sent event handler'); // Log entry into the function
-            console.log('Received message-sent event:', data); // Log the received data for debugging
-            debugger; // Add debugger statement here
-            if ((data.user.id === selectedFriendId && data.recipientId === {{ auth()->id() }}) || 
-                (data.user.id === {{ auth()->id() }} && data.recipientId === selectedFriendId)) {
-                addMessage(data.message.content, data.user);
-            }
-        });
+
 
         let selectedFriendId = null;
 
@@ -228,6 +213,7 @@
     fetchColleagues();
 
     function sendMessage() {
+
         const messageInput = document.getElementById('messageInput');
         const message = messageInput.value;
 
@@ -242,9 +228,9 @@
             },
             data: JSON.stringify({ message }),
             success: function(data) {
-                if (data.status === 'Message Sent!') {
+                if (data.status === true) {
                     messageInput.value = '';
-                    addMessage(data.message.content, { id: {{ auth()->id() }} }); // Add the sent message to the chat box
+                    addMessage(message, { id: {{ auth()->id() }} }); // Add the sent message to the chat box
                 } else {
                     console.error('Error:', data);
                 }
