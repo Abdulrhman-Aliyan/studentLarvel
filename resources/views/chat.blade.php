@@ -9,28 +9,11 @@
             cluster: 'ap2'
         });
 
-        function getNumericFromClass(element) {
-            // Loop through all classes of the element
-            for (let className of element.classList) {
-                // Check if the class contains the specified substring
-                if (className.includes('colleague-')) {
-                    // Extract and return only the numeric part
-                    const match = className.match(/\d+/); // Match numeric digits
-                    return match ? parseInt(match[0], 10) : null; // Return the number or null
-                }
-            }
-            return null; // Return null if no matching class is found
-        }
-
         var channel = pusher.subscribe('chat-channel');
         channel.bind('message-sent', function(data) {
-            if (parseInt(data.recipientId) === parseInt("{{ auth()->id() }}") && 
-                parseInt(getNumericFromClass(document.querySelector('.colleague.active'))) === parseInt(data.user.id)) {
-                    addMessage(data.content, { id: data.sender_id});
-            }
+            
+            addMessage(data.content, { id: data.sender_id });
         });
-
-
 
         let selectedFriendId = null;
 
@@ -78,7 +61,6 @@
                     chatBox.innerHTML = '<div class="no-friend-selected">Failed to load messages</div>';
                 });
         }
-
         document.addEventListener('DOMContentLoaded', function() {
             const chatBox = document.querySelector('.chat-box');
             chatBox.innerHTML = '<div class="no-friend-selected">No friend selected</div>';
@@ -89,6 +71,8 @@
                 .then(response => response.json())
                 .then(data => {})
                 .catch(error => console.error('Error fetching all messages:', error));
+
+            document.getElementById('openCoursesButton').addEventListener('click', openCoursesPage);
         });
 
         function displayColleagues(data) {
@@ -100,9 +84,9 @@
                 const subjectBadges = colleagueData.shared_subjects.map(subject =>
                     `<div class="m-1 badge bg-dark d-none">${subject}</div>` // Initially hide badges
                 ).join('');
-                
+
                 const listItem = $(`
-                    <li class="list-group-item d-flex align-items-center colleague colleague-${colleague.id}" onclick="selectFriend(this, ${colleague.id})">
+                    <li class="list-group-item d-flex align-items-center" onclick="selectFriend(this, ${colleague.id})">
                         <i class="fas fa-user-friends mr-2"></i>
                         <span>${colleague.name}</span>
                         <div class="d-flex flex-wrap w-100">
@@ -150,7 +134,7 @@
 <!-- Include Font Awesome CSS -->
 <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-<div class="container-fluid mt-5">
+<div class="container mt-5">
     <div class="row row-full-height">
         <!-- Friend Section -->
         <div class="col-md-3 d-flex flex-column align-items-center">

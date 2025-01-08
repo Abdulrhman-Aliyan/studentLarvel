@@ -1,0 +1,99 @@
+.chat-button {
+    background-color: #ffa500; /* Orange background color */
+}
+
+.chat-button:hover {
+    background-color: #eb6a01;
+}
+
+.scroll-to-top{
+    background-color: #ffa500; /* Orange background color */
+}
+
+.scroll-to-top:hover{
+    background-color: #eb6a01; /* Orange background color */
+}
+
+.landing-section {
+    background-color: #fff7f1;
+    height: 100vh;
+    max-height: 800px;
+    position: relative; 
+    margin-top: -100px;
+    padding-top: 200px; 
+}
+
+.image-background::before {
+    content: '';
+    position: absolute;
+    bottom: 99%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffd7c3;
+
+}
+
+.image-background {
+    position: relative;
+    height: 60vh;
+    width: 400px;
+    background: #ffd7c3;
+    left: 100px;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+.image-background img {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit:contain;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+.btn-primary {
+    background-color: #ff7500; /* Orange background color */
+    border-color: #ff7500; /* Orange border color */
+}
+
+.btn-primary:hover {
+    background-color: #ff7500; /* Orange background color */
+    border-color: #ff7500; /* Orange border color */
+}
+
+.services {
+    height: 400px;
+}
+
+.services .card {
+    position: relative;
+    padding: 20px;
+    background-color: #fff7f1;
+    width: 200px;
+    border: 0;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.services .icon {
+    font-size: 24px;
+    color: #ff7500;
+    background-color: #ffe6d9;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1000px) {
+    .landing-section .d-none.d-md-block {
+        display: none !important;
+    }
+}

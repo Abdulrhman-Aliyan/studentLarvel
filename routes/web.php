@@ -8,9 +8,12 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserSubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CourseController;
+
 use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
+
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -32,8 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/send-message/{recipientId}', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::post('/receive-message', [ChatController::class, 'sendMessage'])->name('chat.receive');
     Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
-    Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');
-    
+    Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');    
 });
 
 // Student Routes
@@ -68,3 +70,6 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/info', [UserController::class, 'getUserInfo'])->name('info');
     Route::get('/subjects', [UserController::class, 'getUserSubjects'])->name('subjects');
 });
+
+// Course Routes
+Route::get('/courses', [CourseController::class, 'index'])->name('courses');
