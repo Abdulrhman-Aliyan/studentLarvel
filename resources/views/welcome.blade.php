@@ -799,4 +799,5 @@ document.getElementById('assignSubjectForm').addEventListener('submit', function
         background-color: rgba(255, 0, 0, 0.2); /* Slightly more pink on hover */
     }
 </style>
+
 @endsection
