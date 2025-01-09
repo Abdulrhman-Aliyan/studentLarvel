@@ -16,6 +16,7 @@
             transition: background-color 0.3s ease-in-out; /* Smooth transition */
             height: 100px;
         }
+        
         .navbar-scrolled {
             background-color: white !important; /* Solid white background */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
@@ -29,6 +30,7 @@
             color: #FFA500; /* Orange text */
             border: 1px solid #FFA500;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
         }
         .register-button:hover {
             background-color: #FFA500;

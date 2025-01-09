@@ -125,6 +125,15 @@
     background-color: rgba(0, 0, 0, 0);
 }
 
+.top-categories .card.bg-img { 
+    transition: ease-in-out 0.5s;
+}
+
+.top-categories .card.bg-img:hover {
+    transform: scale(1.1);  
+    transition: ease-in-out 0.5s;
+}
+
 
 .course-arrow-btn {
     position: absolute;

@@ -82,7 +82,7 @@
                 <div class="see-all mt-2 text-end">
                     <a href="#"><h4 class="fw-lighter">See all</h4></a>
                 </div>
-                <div class="card bg-img">
+                <div class="card bg-img" style="background-image: url('{{ asset('assets/courses/tech.jpg') }}'); background-size: cover;">
                     <div class="card dark-layer">
                         <div class="card-body">
                             {{-- card body --}}
@@ -92,7 +92,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="courses-list" class="row"></div>
+                <div id="courses-list" class="row">
+                    
+                </div>
             </div>
         </div>
         <div>

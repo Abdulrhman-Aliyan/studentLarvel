@@ -5,14 +5,25 @@
     <script>
         // Enable pusher logging - don't include this in production
 
+        function extractNumberFromClass(element) {
+            const className = element.className;
+            const match = className.match(/c-(\d+)/);
+            return match ? parseInt(match[1], 10) : null;
+        }
+
         var pusher = new Pusher('c9be7f6bf30ca36c9855', {
             cluster: 'ap2'
         });
 
+        
+
         var channel = pusher.subscribe('chat-channel');
+        
         channel.bind('message-sent', function(data) {
-            
-            addMessage(data.content, { id: data.sender_id });
+            if (parseInt(data.recipientId) === parseInt({{ auth()->id() }}) &&
+                extractNumberFromClass(document.querySelector(".colleague.active")) === parseInt(data.user.id) ) {
+                addMessage(data.content, { id: data.sender_id });
+            }
         });
 
         let selectedFriendId = null;
@@ -61,6 +72,7 @@
                     chatBox.innerHTML = '<div class="no-friend-selected">Failed to load messages</div>';
                 });
         }
+
         document.addEventListener('DOMContentLoaded', function() {
             const chatBox = document.querySelector('.chat-box');
             chatBox.innerHTML = '<div class="no-friend-selected">No friend selected</div>';
@@ -75,6 +87,7 @@
             document.getElementById('openCoursesButton').addEventListener('click', openCoursesPage);
         });
 
+
         function displayColleagues(data) {
             const friendsList = $('.friends-list .list-group');
             friendsList.empty();
@@ -86,7 +99,7 @@
                 ).join('');
 
                 const listItem = $(`
-                    <li class="list-group-item d-flex align-items-center" onclick="selectFriend(this, ${colleague.id})">
+                    <li class="list-group-item d-flex align-items-center colleague c-${colleague.id}" onclick="selectFriend(this, ${colleague.id})">
                         <i class="fas fa-user-friends mr-2"></i>
                         <span>${colleague.name}</span>
                         <div class="d-flex flex-wrap w-100">
