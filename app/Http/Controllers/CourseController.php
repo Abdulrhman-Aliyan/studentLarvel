@@ -71,4 +71,25 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->route('courses.index')->with('success', 'Course deleted successfully.');
     }
+
+    public function getCourses()
+    {
+        $courses = Course::with('subject', 'user')->get();
+        return response()->json($courses);
+    }
+
+    public function getLimitedCourses(Request $request)
+    {
+        $offset = $request->input('offset', 0);
+        $limit = 4;
+        $total = Course::count();
+        $courses = Course::with('subject', 'user')->offset($offset)->limit($limit)->get();
+        return response()->json(['courses' => $courses, 'total' => $total]);
+    }
+
+    public function getPopularCourses()
+    {
+        $courses = Course::with('subject', 'user')->orderBy('rating', 'desc')->limit(10)->get();
+        return response()->json($courses);
+    }
 }
