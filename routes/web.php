@@ -35,8 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/send-message/{recipientId}', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::post('/receive-message', [ChatController::class, 'sendMessage'])->name('chat.receive');
     Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
-    Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');    
-});
+    Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');
+
+    Route::get('/ajax/courses', [CourseController::class, 'getCourses'])->name('ajax.courses');
+    Route::get('/courses', [CourseController::class, 'index'])->name('courses');});
 
 // Student Routes
 Broadcast::routes(['middleware' => 'auth']);
@@ -72,4 +74,4 @@ Route::prefix('user')->name('user.')->group(function () {
 });
 
 // Course Routes
-Route::get('/courses', [CourseController::class, 'index'])->name('courses');
+Route::resource('courses', CourseController::class);

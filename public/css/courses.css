@@ -17,7 +17,7 @@
 .landing-section {
     background-color: #fff7f1;
     height: 100vh;
-    max-height: 800px;
+    max-height: 1080px;
     position: relative; 
     margin-top: -100px;
     padding-top: 200px; 
@@ -29,14 +29,15 @@
     bottom: 99%;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 60vh;
     background: #ffd7c3;
 
 }
 
 .image-background {
+    top: 10vh;
     position: relative;
-    height: 60vh;
+    height: 400px;
     width: 400px;
     background: #ffd7c3;
     left: 100px;
@@ -66,7 +67,7 @@
 }
 
 .services {
-    height: 400px;
+    min-height: 400px;
 }
 
 .services .card {
@@ -90,6 +91,76 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.top-categories {
+    padding: 50px 0;
+    min-height: 500px;
+}
+
+.top-categories .container {
+    min-height: 400px;
+    position: relative;
+}
+
+.top-categories .card {
+    width: 200px;
+    height: 300px;
+    border: 0;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.top-categories .card.dark-layer {
+    height: 100%;
+    width: 100%;
+    background-color:rgba(0, 0, 0, 0.1);
+    border-radius: 25px;
+    position: absolute;
+}
+
+.top-categories .card .dark-layer .card-footer {
+    color: #fff;
+    border: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+
+.course-arrow-btn {
+    position: absolute;
+    z-index: 10;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ffa500;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Add this line */
+    border: 0;
+    top: 50%;
+    transform: translateY(50%);
+}
+
+.see-all a{
+    color: #ffa500;
+    text-decoration: none;
+}
+
+.course-arrow-btn.right {
+    right: -10px;
+}
+
+.course-arrow-btn.left {
+    left: -10px;
+    
+}
+
+.course-arrow-btn:hover {
+    background-color: #ff7500;
 }
 
 @media (max-width: 1000px) {

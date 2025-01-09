@@ -90,7 +90,7 @@
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
                 <!-- Education Icon -->
-                <i class="fas fa-graduation-cap fa-3x"></i>
+                <i style="font-size: 80px" class="bi bi-brightness-alt-low"></i>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
