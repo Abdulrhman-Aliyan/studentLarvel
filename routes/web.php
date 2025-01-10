@@ -36,12 +36,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/receive-message', [ChatController::class, 'sendMessage'])->name('chat.receive');
     Route::get('/messages/{friendId}', [ChatController::class, 'getMessages'])->name('chat.messages');
     Route::post('/send-test-message', [ChatController::class, 'sendTestMessage'])->name('chat.sendTest');
-
-    Route::get('/ajax/courses', [CourseController::class, 'getCourses'])->name('ajax.courses');
-    Route::get('/ajax/limited-courses', [CourseController::class, 'getLimitedCourses'])->name('ajax.limited-courses');
-    Route::get('/ajax/popular-courses', [CourseController::class, 'getPopularCourses'])->name('ajax.popular-courses');
-    Route::get('/courses', [CourseController::class, 'index'])->name('courses');
 });
+
+// Make these routes accessible without authentication
+Route::get('/ajax/courses', [CourseController::class, 'getCourses'])->name('ajax.courses');
+Route::get('/ajax/limited-courses', [CourseController::class, 'getLimitedCourses'])->name('ajax.limited-courses');
+Route::get('/ajax/popular-courses', [CourseController::class, 'getPopularCourses'])->name('ajax.popular-courses');
+Route::get('/ajax/additional-courses', [CourseController::class, 'getAdditionalCourses'])->name('ajax.additional-courses');
+Route::get('/courses', [CourseController::class, 'index'])->name('courses');
 
 // Student Routes
 Broadcast::routes(['middleware' => 'auth']);
